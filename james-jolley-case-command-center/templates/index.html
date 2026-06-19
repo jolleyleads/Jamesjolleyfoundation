@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ case_name }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 24px;
+    }
+    .card {
+      background: #111827;
+      border: 1px solid #374151;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.25);
+    }
+    h1, h2 {
+      margin-top: 0;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #4b5563;
+      background: #020617;
+      color: #e5e7eb;
+      box-sizing: border-box;
+    }
+    textarea {
+      min-height: 130px;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      margin-top: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    pre {
+      white-space: pre-wrap;
+      background: #020617;
+      border: 1px solid #334155;
+      padding: 14px;
+      border-radius: 10px;
+      overflow-x: auto;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px;
+    }
+    .pill {
+      display: inline-block;
+      background: #1e293b;
+      padding: 8px 12px;
+      border-radius: 999px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>{{ case_name }}</h1>
+      <p>Owner: {{ owner }}</p>
+      <span class="pill">Directive</span>
+      <span class="pill">Orchestration</span>
+      <span class="pill">Execution</span>
+    </div>
+
+    <div class="card">
+      <h2>Submit Case Update</h2>
+
+      <div class="grid">
+        <div>
+          <label>Case ID</label>
+          <input id="case_id" value="JAMES-JOLLEY-CASE" />
+        </div>
+
+        <div>
+          <label>Category</label>
+          <select id="category">
+            <option>Timeline Event</option>
+            <option>Evidence</option>
+            <option>Witness Statement</option>
+            <option>Detective Update</option>
+            <option>Prosecutor Update</option>
+            <option>Court Update</option>
+            <option>Phone Call</option>
+            <option>Document Upload</option>
+            <option>Contradiction Review</option>
+            <option>Follow-Up Action</option>
+            <option>General Case Note</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Event Date</label>
+          <input id="event_date" type="date" />
+        </div>
+
+        <div>
+          <label>Event Time</label>
+          <input id="event_time" type="time" />
+        </div>
+      </div>
+
+      <label>Location</label>
+      <input id="location" placeholder="Portsmouth, Virginia" />
+
+      <label>Description</label>
+      <textarea id="description" placeholder="Enter the case update, evidence note, witness statement, phone call, court update, or follow-up..."></textarea>
+
+      <label>People Involved, comma separated</label>
+      <input id="people_involved" placeholder="Matthew Jolley, Detective Jackson, Prosecutor..." />
+
+      <label>Witness Names, comma separated</label>
+      <input id="witness_names" placeholder="Sam, Savannah..." />
+
+      <label>Evidence Links / Documents, comma separated</label>
+      <input id="evidence_links" placeholder="Google Drive link, Ring camera link, screenshot link..." />
+
+      <div class="grid">
+        <div>
+          <label>Urgency</label>
+          <select id="urgency_level">
+            <option>medium</option>
+            <option>low</option>
+            <option>high</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Follow-Up Needed</label>
+          <select id="follow_up_needed">
+            <option value="false">false</option>
+            <option value="true">true</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Contradiction Check Needed</label>
+          <select id="contradiction_check_needed">
+            <option value="false">false</option>
+            <option value="true">true</option>
+          </select>
+        </div>
+      </div>
+
+      <button onclick="submitUpdate()">Submit Update</button>
+    </div>
+
+    <div class="card">
+      <h2>Result</h2>
+      <pre id="result">No update submitted yet.</pre>
+    </div>
+
+    <div class="card">
+      <h2>System Snapshot</h2>
+      <button onclick="loadSnapshot()">Load Snapshot</button>
+      <pre id="snapshot">Snapshot not loaded.</pre>
+    </div>
+  </div>
+
+  <script>
+    function splitList(value) {
+      if (!value || !value.trim()) return [];
+      return value.split(",").map(x => x.trim()).filter(Boolean);
+    }
+
+    async function submitUpdate() {
+      const payload = {
+        case_id: document.getElementById("case_id").value,
+        case_name: "James Jolley Case Files",
+        event_date: document.getElementById("event_date").value,
+        event_time: document.getElementById("event_time").value,
+        location: document.getElementById("location").value,
+        category: document.getElementById("category").value,
+        description: document.getElementById("description").value,
+        summary: document.getElementById("description").value.slice(0, 180),
+        people_involved: splitList(document.getElementById("people_involved").value),
+        witness_names: splitList(document.getElementById("witness_names").value),
+        evidence_links: splitList(document.getElementById("evidence_links").value),
+        documents: splitList(document.getElementById("evidence_links").value),
+        phone_logs: [],
+        urgency_level: document.getElementById("urgency_level").value,
+        follow_up_needed: document.getElementById("follow_up_needed").value === "true",
+        contradiction_check_needed: document.getElementById("contradiction_check_needed").value === "true",
+        source: "Web Dashboard",
+        submitted_by: "Matthew Jolley"
+      };
+
+      const response = await fetch("/api/case-update", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+      document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function loadSnapshot() {
+      const response = await fetch("/api/snapshot");
+      const data = await response.json();
+      document.getElementById("snapshot").textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>

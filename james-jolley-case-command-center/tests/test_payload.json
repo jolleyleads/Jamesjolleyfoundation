@@ -1,0 +1,20 @@
+{
+  "case_id": "JAMES-JOLLEY-CASE",
+  "case_name": "James Jolley Case Files",
+  "event_date": "2026-06-06",
+  "event_time": "09:30",
+  "location": "Portsmouth, Virginia",
+  "category": "Timeline Event",
+  "description": "Initial DOE command center test update. This confirms Flask intake, deterministic execution, timeline logging, follow-up generation, audit logging, and Make.com forwarding.",
+  "summary": "Initial DOE command center test update.",
+  "people_involved": ["Matthew Jolley"],
+  "witness_names": [],
+  "evidence_links": [],
+  "phone_logs": [],
+  "documents": [],
+  "urgency_level": "medium",
+  "follow_up_needed": true,
+  "contradiction_check_needed": false,
+  "source": "PowerShell Bootstrap Test",
+  "submitted_by": "Matthew Jolley"
+}

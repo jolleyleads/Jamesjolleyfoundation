@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: james-jolley-case-command-center
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: MAKE_WEBHOOK_URL
+        sync: false
+      - key: CASE_OWNER
+        value: Matthew Jolley
+      - key: CASE_NAME
+        value: James Jolley Case Files
+      - key: DEFAULT_CASE_ID
+        value: JAMES-JOLLEY-CASE
+      - key: ADMIN_EMAIL
+        value: neyolabs@gmail.com
